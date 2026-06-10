@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Video Startscreen</title>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        height: 100%;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+    }
+
+    #poster {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        max-width: 100vw;
+        max-height: 100vh;
+        object-fit: contain;
+        cursor: pointer;
+        z-index: 5;
+        background: black;
+    }
+
+    #video {
+        position: absolute;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        object-fit: contain;
+        background: black;
+        display: none;
+        pointer-events: none;
+    }
+
+    .btn {
+        position: absolute;
+        bottom: 20px;
+        padding: 12px 22px;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        font-size: 24px;
+        border-radius: 10px;
+        user-select: none;
+        z-index: 10;
+        cursor: pointer;
+        pointer-events: auto;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    #pausePlayButton { right: 20px; }
+    #restartButton   { left: 20px; }
+</style>
+
+</head>
+<body>
+
+<!-- STARTBILD -->
+<img id="poster"
+     src="https://gesellschaft-kultur-geschichte.de/wp-content/uploads/Neonazis-in-Dtl.jpg"
+     alt="Startbild">
+
+<!-- VIDEO -->
+<video id="video">
+    <source src="https://gesellschaft-kultur-geschichte.de/wp-content/uploads/L.Rauch_.Neonazis1.mp4" type="video/mp4">
+</video>
+
+<!-- BUTTONS -->
+<div id="restartButton" class="btn">⭯</div>
+<div id="pausePlayButton" class="btn">⏸</div>
+
+<script>
+const poster = document.getElementById("poster");
+const video = document.getElementById("video");
+const restartButton = document.getElementById("restartButton");
+const pausePlayButton = document.getElementById("pausePlayButton");
+
+function showButtons() {
+    pausePlayButton.style.opacity = "1";
+    restartButton.style.opacity  = "1";
+}
+
+function hideButtons() {
+    pausePlayButton.style.opacity = "0";
+    restartButton.style.opacity  = "0";
+}
+
+function startVideo() {
+    poster.style.display = "none";
+    video.style.display = "block";
+    video.currentTime = 0;
+    video.play();
+
+    showButtons();
+    pausePlayButton.textContent = "⏸";
+}
+
+poster.addEventListener("click", startVideo);
+poster.addEventListener("touchstart", startVideo);
+
+function togglePlay() {
+    if (video.paused) {
+        video.play();
+        pausePlayButton.textContent = "⏸";
+    } else {
+        video.pause();
+        pausePlayButton.textContent = "▶";
+    }
+}
+
+pausePlayButton.addEventListener("click", togglePlay);
+pausePlayButton.addEventListener("touchstart", togglePlay);
+
+function restart() {
+    video.pause();
+    video.currentTime = 0;
+    video.style.display = "none";
+    poster.style.display = "block";
+    hideButtons();
+    pausePlayButton.textContent = "⏸";
+}
+
+restartButton.addEventListener("click", restart);
+restartButton.addEventListener("touchstart", restart);
+
+video.addEventListener("ended", restart);
+</script>
+
+</body>
+</html>
